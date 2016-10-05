@@ -3,9 +3,9 @@ require 'formula'
 class Zeal < Formula
   desc 'Zeal is a simple offline documentation browser inspired by Dash.'
   homepage "http://zealdocs.org/"
-  url 'https://github.com/zealdocs/zeal/archive/v0.2.1.tar.gz'
+  url 'https://github.com/zealdocs/zeal/archive/v0.3.0.tar.gz'
   sha256 '994c5fad079cb34952fc05b0663920118489ed7f00f8e5a5887ff2e2bd05861d'
-  head "https://github.com/zealdocs/zeal.git"
+  head "d723c6bc3cb08398d10e7c204929853c9d40d57431a5a16752630b258ae96dc1"
 
   depends_on "homebrew/versions/qt55"
   depends_on "libarchive"
