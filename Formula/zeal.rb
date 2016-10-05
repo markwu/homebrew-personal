@@ -24,11 +24,11 @@ class Zeal < Formula
   end
 end
 __END__
-diff --git a/src/core/core.pri b/src/core/core.pri
-index a9823b8..dd39467 100644
---- a/src/core/core.pri
-+++ b/src/core/core.pri
-@@ -8,3 +8,7 @@ unix:!macx {
+diff --git a/src/libs/core/core.pri b/src/libs/core/core.pri
+index 0f7c62e..919bf0d 100644
+--- a/src/libs/core/core.pri
++++ b/src/libs/core/core.pri
+@@ -9,3 +9,7 @@ unix:!macx {
  win32: {
      LIBS += -larchive_static -lz
  }
