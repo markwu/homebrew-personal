@@ -7,13 +7,13 @@ class Zeal < Formula
   sha256 'd723c6bc3cb08398d10e7c204929853c9d40d57431a5a16752630b258ae96dc1'
   head "https://github.com/zealdocs/zeal.git"
 
-  depends_on "homebrew/versions/qt55"
+  depends_on "qt5"
   depends_on "libarchive"
 
   patch :DATA
 
   def install
-    system "/usr/local/opt/qt55/bin/qmake"
+    system "/usr/local/opt/qt5/bin/qmake"
     system "/usr/bin/make"
     prefix.install "bin/Zeal.app"
     (bin/"zeal").write("#! /bin/sh\n#{prefix}/Zeal.app/Contents/MacOS/Zeal \"$@\"\n")
