@@ -10,9 +10,25 @@ class Glogg < Formula
   depends_on "qt5"
   depends_on "boost"
 
+  patch :DATA
+
   def install
     system "/usr/local/opt/qt5/bin/qmake"
     system "/usr/bin/make"
     prefix.install "release/glogg.app"
   end
 end
+__END__
+diff --git a/glogg.pro b/glogg.pro
+index 3b5eb5f..67e987b 100644
+--- a/glogg.pro
++++ b/glogg.pro
+@@ -224,7 +224,7 @@ macx {
+     QMAKE_CXXFLAGS += -stdlib=libc++
+     QMAKE_LFLAGS += -stdlib=libc++
+
+-    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.6
++    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
+ }
+
+ # Official builds can be generated with `qmake VERSION="1.2.3"'
