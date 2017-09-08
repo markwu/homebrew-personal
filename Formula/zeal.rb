@@ -13,7 +13,7 @@ class Zeal < Formula
   patch :DATA
 
   def install
-    system "/usr/local/Cellar/qt@5.5/5.5.1_1/bin/qmake""
+    system "/usr/local/Cellar/qt@5.5/5.5.1_1/bin/qmake"
     system "/usr/bin/make"
     prefix.install "bin/Zeal.app"
     (bin/"zeal").write("#! /bin/sh\n#{prefix}/Zeal.app/Contents/MacOS/Zeal \"$@\"\n")
