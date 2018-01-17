@@ -3,8 +3,8 @@ require 'formula'
 class Zeal < Formula
   desc 'Zeal is a simple offline documentation browser inspired by Dash.'
   homepage "http://zealdocs.org/"
-  url 'https://github.com/zealdocs/zeal/archive/v0.4.0.tar.gz'
-  sha256 '1f6b50026036923ae0cfbf3f4eb1066ee2fdaf0425d4c321203e0dd9506823fd'
+  url 'https://github.com/zealdocs/zeal/archive/v0.5.0.tar.gz'
+  sha256 '3efb7b1b5d9a05f0fc60a6686571f7a4b58fa6f6d66f1baf608e83b10fb1290c'
   head "https://github.com/zealdocs/zeal.git"
 
   depends_on "qt@5.5"
