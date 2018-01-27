@@ -3,8 +3,8 @@ require 'formula'
 class Glogg < Formula
   desc 'glogg is a multi-platform GUI application to browse and search through long or complex log files.'
   homepage "http://glogg.bonnefon.org/"
-  url 'https://github.com/nickbnf/glogg/archive/v1.1.3.tar.gz'
-  sha256 '8e78ffe2da306e6d42ec6ab227aa5ada58303022ab271c23f50396974e8b4eb8'
+  url 'http://glogg.bonnefon.org/files/glogg-1.1.4.tar.gz'
+  sha256 '0c1ddc72ebfc255bbb246446fb7be5b0fd1bb1594c70045c3e537cb6d274965b'
   head "https://github.com/nickbnf/glogg.git"
 
   depends_on "qt5"
