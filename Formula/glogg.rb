@@ -6,6 +6,7 @@ class Glogg < Formula
   url 'http://glogg.bonnefon.org/files/glogg-1.1.4.tar.gz'
   sha256 '0c1ddc72ebfc255bbb246446fb7be5b0fd1bb1594c70045c3e537cb6d274965b'
   head "https://github.com/nickbnf/glogg.git"
+  version '1.1.4'
 
   depends_on "qt5"
   depends_on "boost"
