@@ -25,7 +25,7 @@ class Zeal < Formula
 end
 __END__
 diff --git a/src/libs/core/core.pri b/src/libs/core/core.pri
-index 0f7c62e..919bf0d 100644
+index 67bc5ec..f19e643 100644
 --- a/src/libs/core/core.pri
 +++ b/src/libs/core/core.pri
 @@ -9,3 +9,7 @@ unix:!macx {
