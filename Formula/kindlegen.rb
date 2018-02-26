@@ -14,7 +14,7 @@ class Kindlegen < Formula
   end
 
   def caveats
-    <<-EOS.undent
+    <<~EOS
       We agreed to the KindleGen License Agreement for you by downloading KindleGen.
       If this is unacceptable you should uninstall.
 
