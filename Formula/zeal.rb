@@ -3,21 +3,24 @@ require 'formula'
 class Zeal < Formula
   desc 'Zeal is a simple offline documentation browser inspired by Dash.'
   homepage "http://zealdocs.org/"
-  url 'https://github.com/zealdocs/zeal/archive/v0.5.0.tar.gz'
-  sha256 '3efb7b1b5d9a05f0fc60a6686571f7a4b58fa6f6d66f1baf608e83b10fb1290c'
+  url 'https://github.com/zealdocs/zeal/archive/v0.6.0.tar.gz'
+  sha256 'ef307d3ad4f03c76fa5fc249f8e7e04de879aa7574bec1ff8be548dbc2c02973'
   head "https://github.com/zealdocs/zeal.git"
-  version '0.5.0'
+  version '0.6.0'
 
+  depends_on "cmake" => :build
   depends_on "qt@5.5"
   depends_on "libarchive"
 
   patch :DATA
 
   def install
-    system "/usr/local/Cellar/qt@5.5/5.5.1_1/bin/qmake"
-    system "/usr/bin/make"
-    prefix.install "bin/Zeal.app"
-    (bin/"zeal").write("#! /bin/sh\n#{prefix}/Zeal.app/Contents/MacOS/Zeal \"$@\"\n")
+    mkdir "build" do
+      system "cmake", ".."
+      system "make"
+      prefix.install "bin/Zeal.app"
+      (bin/"zeal").write("#! /bin/sh\n#{prefix}/Zeal.app/Contents/MacOS/Zeal \"$@\"\n")
+    end
   end
 
   test do
@@ -25,15 +28,20 @@ class Zeal < Formula
   end
 end
 __END__
-diff --git a/src/libs/core/core.pri b/src/libs/core/core.pri
-index 67bc5ec..f19e643 100644
---- a/src/libs/core/core.pri
-+++ b/src/libs/core/core.pri
-@@ -9,3 +9,7 @@ unix:!macx {
- win32: {
-     LIBS += -larchive_static -lz
- }
-+macx: {
-+    INCLUDEPATH += /usr/local/opt/libarchive/include
-+    LIBS += -L/usr/local/opt/libarchive/lib -larchive -lsqlite3
-+}
+diff --git a/src/libs/core/CMakeLists.txt b/src/libs/core/CMakeLists.txt
+index cd212bb..bd9b903 100644
+--- a/src/libs/core/CMakeLists.txt
++++ b/src/libs/core/CMakeLists.txt
+@@ -9,9 +9,12 @@ add_library(Core
+
+ target_link_libraries(Core Registry Ui)
+
++list(APPEND CMAKE_PREFIX_PATH /usr/local/opt/qt@5.5)
+ find_package(Qt5 COMPONENTS Network WebKit Widgets REQUIRED)
+ target_link_libraries(Core Qt5::Network Qt5::WebKit Qt5::Widgets)
+
++list(APPEND CMAKE_PREFIX_PATH /usr/local/opt/libarchive)
++list(APPEND CMAKE_LIBRARY_PATH /usr/local/opt/libarchive)
+ find_package(LibArchive REQUIRED)
+ include_directories(${LibArchive_INCLUDE_DIRS})
+ target_link_libraries(Core ${LibArchive_LIBRARIES})
