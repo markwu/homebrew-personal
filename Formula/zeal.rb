@@ -3,10 +3,10 @@ require 'formula'
 class Zeal < Formula
   desc 'Zeal is a simple offline documentation browser inspired by Dash.'
   homepage "http://zealdocs.org/"
-  url 'https://github.com/zealdocs/zeal/archive/v0.6.0.tar.gz'
-  sha256 'ef307d3ad4f03c76fa5fc249f8e7e04de879aa7574bec1ff8be548dbc2c02973'
+  url 'https://github.com/zealdocs/zeal/archive/v0.6.1.tar.gz'
+  sha256 '095c08f9903071849d5c79878abd48237ce1615f16d324afff1873ab6b5f0026'
   head "https://github.com/zealdocs/zeal.git"
-  version '0.6.0'
+  version '0.6.1'
 
   depends_on "cmake" => :build
   depends_on "qt@5.5"
