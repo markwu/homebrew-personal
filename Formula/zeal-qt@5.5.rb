@@ -1,6 +1,6 @@
 require 'formula'
 
-class ZealATQt55 < Formula
+class ZealQtAT55 < Formula
   desc 'Zeal is a simple offline documentation browser inspired by Dash.'
   homepage "http://zealdocs.org/"
   url 'https://github.com/zealdocs/zeal/archive/v0.6.1.tar.gz'
