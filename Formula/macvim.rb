@@ -1,104 +1,121 @@
-require 'formula'
-
+# Reference: https://github.com/macvim-dev/macvim/wiki/building
 class Macvim < Formula
-  desc 'GUI for vim, made for OS X'
-  homepage 'https://github.com/macvim-dev/macvim'
-  head 'https://github.com/macvim-dev/macvim.git'
+  desc "GUI for vim, made for macOS"
+  homepage "https://github.com/macvim-dev/macvim"
+  sha256 "c8c18209d5dbfeaeeb69bd15723840a54507ba181a5fb790093fdfaed04846eb"
+  head "https://github.com/macvim-dev/macvim.git"
 
-  option 'with-properly-linked-python2-python3', 'Link with properly linked Python 2 and Python 3. You will get deadly signal SEGV if you don\'t have properly linked Python 2 and Python 3.'
-  option 'with-rvm-ruby=', 'Compiled against with RVM ruby.'
+  option 'with-custom-ruby', 'Compiled against with custom ruby.'
 
-  depends_on 'gettext' => :build
-  depends_on 'lua' => :build
-  depends_on 'python3' => :build
+  depends_on :xcode => :build
+  depends_on "cscope"
+  depends_on "lua"
+  depends_on "python"
 
-  def get_path(name)
-    f = Formulary.factory(name)
-    if f.rack.directory?
-      kegs = f.rack.subdirs.map { |keg| Keg.new(keg) }.sort_by(&:version)
-      return kegs.last.to_s unless kegs.empty?
-    end
-    nil
-  end
+  conflicts_with "vim",
+    :because => "vim and macvim both install vi* binaries"
 
   def install
-    perl_version = '5.16'
-    ENV.append 'VERSIONER_PERL_VERSION', perl_version
-    ENV.append 'VERSIONER_PYTHON_VERSION', '2.7'
-    ENV.append 'vi_cv_path_python3', "#{HOMEBREW_PREFIX}/bin/python3"
-    ENV.append 'vi_cv_path_plain_lua', "#{HOMEBREW_PREFIX}/bin/lua"
-    ENV.append 'vi_cv_dll_name_perl', "/System/Library/Perl/#{perl_version}/darwin-thread-multi-2level/CORE/libperl.dylib"
-    ENV.append 'vi_cv_dll_name_python3', "#{HOMEBREW_PREFIX}/Frameworks/Python.framework/Versions/3.7/Python"
+    # Avoid issues finding Ruby headers
+    if MacOS.version == :sierra || MacOS.version == :yosemite
+      ENV.delete("SDKROOT")
+    end
+
+    # MacVim doesn't have or require any Python package, so unset PYTHONPATH
+    ENV.delete("PYTHONPATH")
+
+    # If building for OS X 10.7 or up, make sure that CC is set to "clang"
+    ENV.clang if MacOS.version >= :lion
 
     opts = []
-    if build.with? 'properly-linked-python2-python3'
-      opts << '--with-properly-linked-python2-python3'
-    end
-    if build.with? 'rvm-ruby='
-      rubypath = ARGV.value("with-rvm-ruby") || "ruby"
-      opts << "--with-ruby-command=#{rubypath}/bin/ruby"
+    if build.with? 'custom-ruby'
+      custom_ruby_cmd = ENV['HOMEBREW_CUSTOM_RUBY_CMD']
+      opts << "--with-ruby-command=#{custom_ruby_cmd}"
     end
 
-    system './configure', "--prefix=#{prefix}",
-                          '--with-features=huge',
-                          '--enable-multibyte',
-                          '--enable-terminal',
-                          '--enable-netbeans',
-                          '--with-tlib=ncurses',
-                          '--enable-cscope',
-                          '--enable-termtruecolor',
-                          '--enable-perlinterp=dynamic',
-                          '--enable-pythoninterp=dynamic',
-                          '--enable-python3interp=dynamic',
-                          '--enable-rubyinterp=dynamic',
-                          '--enable-luainterp=dynamic',
-                          "--with-lua-prefix=#{HOMEBREW_PREFIX}",
+    system "./configure", "--prefix=#{prefix}",
+                          "--with-features=huge",
+                          "--with-compiledby=Homebrew",
+                          "--with-macarchs=#{MacOS.preferred_arch}",
+                          "--with-local-dir=#{HOMEBREW_PREFIX}",
+                          "--with-tlib=ncurses",
+                          "--enable-multibyte",
+                          "--enable-terminal",
+                          "--enable-cscope",
+                          "--enable-perlinterp",
+                          "--enable-rubyinterp=dynamic",
+                          "--enable-pythoninterp=dynamic",
+                          "--enable-python3interp=dynamic",
+                          "--enable-luainterp=dynamic",
+                          "--with-lua-prefix=#{Formula["lua"].opt_prefix}",
                           *opts
 
-    system 'make'
+    system "make"
 
-    apppath = 'src/MacVim/build/Release/MacVim.app'
+    app_path = 'src/MacVim/build/Release/MacVim.app'
+    vimrc = "#{buildpath}/#{app_path}/Contents/Resources/vim/vimrc"
 
-    instance_variable_set("@gettext", get_path("gettext"))
-    system "PATH=#{@gettext}/bin:$PATH " +
-           "MSGFMT=#{@gettext}/bin/msgfmt " +
-           'INSTALL_DATA=install ' +
-           'FILEMOD=644 ' +
-           "LOCALEDIR=../../#{apppath}/Contents/Resources/vim/runtime/lang " +
-           'make -C src/po install'
+    inreplace vimrc, /^if exists\("&pythonthreedll"\) && exists\("&pythonthreehome"\).*$/m, <<~EOS
+if exists("&pythonthreedll") && exists("&pythonthreehome")
+  if filereadable("/usr/local/Frameworks/Python.framework/Versions/3.7/Python")
+    " Homebrew python 3.7
+    set pythonthreedll=/usr/local/Frameworks/Python.framework/Versions/3.7/Python
+    set pythonthreehome=/usr/local/Frameworks/Python.framework/Versions/3.7
+  elseif filereadable("/opt/local/Library/Frameworks/Python.framework/Versions/3.7/Python")
+    " MacPorts python 3.7
+    set pythonthreedll=/opt/local/Library/Frameworks/Python.framework/Versions/3.7/Python
+    set pythonthreehome=/opt/local/Library/Frameworks/Python.framework/Versions/3.7
+  elseif filereadable("/Library/Frameworks/Python.framework/Versions/3.7/Python")
+    " https://www.python.org/downloads/mac-osx/
+    set pythonthreedll=/Library/Frameworks/Python.framework/Versions/3.7/Python
+    set pythonthreehome=/Library/Frameworks/Python.framework/Versions/3.7
+  endif
+endif
 
-    if build.with? 'rvm-ruby='
-      rubypath = ARGV.value("with-rvm-ruby") || "ruby"
-      rubydll = "#{rubypath}/lib/libruby.2.5.dylib"
-      vimrc = "#{buildpath}/#{apppath}/Contents/Resources/vim/vimrc"
+    EOS
+
+    if build.with? 'custom-ruby'
+      custom_ruby_lib = ENV['HOMEBREW_CUSTOM_RUBY_LIB']
       open(vimrc, 'a') { |f|
-        f << "\" RVM ruby\n"
-        f << "\" MacVim is configured by --with-rvm-ruby option to use RVM ruby version\n"
-        f << "set rubydll=#{rubydll}"
+        f << "\" Ruby\n"
+        f << "\" MacVim is configured by --with-custom-ruby option to use custom ruby version\n"
+        f << "set rubydll=#{custom_ruby_lib}"
       }
     end
 
-    prefix.install apppath
+    prefix.install "src/MacVim/build/Release/MacVim.app"
+    bin.install_symlink prefix/"MacVim.app/Contents/bin/mvim"
 
-    appbin = prefix + "MacVim.app/Contents/bin"
-    bin = prefix + 'bin'
-    mkdir_p bin
+    # Create MacVim vimdiff, view, ex equivalents
+    executables = %w[mvimdiff mview mvimex gvim gvimdiff gview gvimex]
+    executables += %w[vi vim vimdiff view vimex]
+    executables.each { |e| bin.install_symlink "mvim" => e }
+  end
 
-    [
-      'vim', 'vimdiff', 'view',
-      'gvim', 'gvimdiff', 'gview',
-      'mvim', 'mvimdiff', 'mview'
-    ].each do |t|
-      ln_s '../MacVim.app/Contents/bin/mvim', bin + t
-    end
+  def caveats; <<~EOS
+    To compile MacVim with custom ruby, you have to use '--with-custom-ruby'
+    option, and also specify the following two enironment variables in you shell
+    environment or .bashrc:
+
+    $ export HOMEBREW_CUSTOM_RUBY_CMD=$(ruby -r rbconfig -e "print File.join(RbConfig::CONFIG['bindir'], RbConfig::CONFIG['ruby_install_name'])")
+    $ export HOMEBREW_CUSTOM_RUBY_LIB=$(ruby -r rbconfig -e "print File.join(RbConfig::CONFIG['libdir'], RbConfig::CONFIG['LIBRUBY'])")
+
+    Without these two variables, custom ruby can not link correctly.
+    EOS
   end
 
   test do
-    (testpath/'a').write 'hai'
-    (testpath/'b').write 'bai'
-    system bin/'vimdiff', 'a', 'b',
-           '-c', 'FormatCommand diffformat',
-           '-c', 'w! diff.html', '-c', 'qa!'
-    File.exist? 'diff.html'
+    output = shell_output("#{bin}/mvim --version")
+    assert_match "+ruby", output
+
+    # Simple test to check if MacVim was linked to Homebrew's Python 3
+    py3_exec_prefix = Utils.popen_read("python3-config", "--exec-prefix")
+    assert_match py3_exec_prefix.chomp, output
+    (testpath/"commands.vim").write <<~EOS
+      :python3 import vim; vim.current.buffer[0] = 'hello python3'
+      :wq
+    EOS
+    system bin/"mvim", "-v", "-T", "dumb", "-s", "commands.vim", "test.txt"
+    assert_equal "hello python3", (testpath/"test.txt").read.chomp
   end
 end
