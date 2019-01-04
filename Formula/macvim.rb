@@ -55,6 +55,7 @@ class Macvim < Formula
     app_path = 'src/MacVim/build/Release/MacVim.app'
     vimrc = "#{buildpath}/#{app_path}/Contents/Resources/vim/vimrc"
 
+    # Patch MacVim buildin vimrc to fix homebrew python3 dynamic link problem
     inreplace vimrc, /^if exists\("&pythonthreedll"\) && exists\("&pythonthreehome"\).*$/m, <<~EOS
 if exists("&pythonthreedll") && exists("&pythonthreehome")
   if filereadable("/usr/local/Frameworks/Python.framework/Versions/3.7/Python")
@@ -74,13 +75,14 @@ endif
 
     EOS
 
+    # Add custom ruby dll to MacVim buildin vimrc
     if build.with? 'custom-ruby'
       custom_ruby_lib = ENV['HOMEBREW_CUSTOM_RUBY_LIB']
-      open(vimrc, 'a') { |f|
-        f << "\" Ruby\n"
-        f << "\" MacVim is configured by --with-custom-ruby option to use custom ruby version\n"
-        f << "set rubydll=#{custom_ruby_lib}"
-      }
+      Pathname(vimrc).append_lines <<~EOS
+      " Ruby
+      " MacVim is configured by --with-custom-ruby option to use custom ruby version
+      set rubydll=#{custom_ruby_lib}
+      EOS
     end
 
     prefix.install "src/MacVim/build/Release/MacVim.app"
