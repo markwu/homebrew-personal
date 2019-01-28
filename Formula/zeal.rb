@@ -13,7 +13,19 @@ class Zeal < Formula
   depends_on "markwu/personal/qt5-webkit"
   depends_on "libarchive"
 
-  patch :DATA
+  stable do
+    patch do
+      url "https://raw.githubusercontent.com/markwu/homebrew-personal/master/Formula/zeal@0.6.1.diff"
+      sha256 "55bda868aaa3092b84575db5151f910045b650bdf7b6dfe1058cdea91829a810"
+    end
+  end
+
+  head do
+    patch do
+      url "https://raw.githubusercontent.com/markwu/homebrew-personal/master/Formula/zeal@head.diff"
+      sha256 "9070b4a0e0a6799038289607deab6dbc5e3e7a7c72a84f74738f26ba4edb2f85"
+    end
+  end
 
   def install
     mkdir "build" do
@@ -28,35 +40,3 @@ class Zeal < Formula
     system "zeal", "-h"
   end
 end
-__END__
-diff --git a/src/libs/core/CMakeLists.txt b/src/libs/core/CMakeLists.txt
-index cd212bb..1a46756 100644
---- a/src/libs/core/CMakeLists.txt
-+++ b/src/libs/core/CMakeLists.txt
-@@ -9,9 +9,14 @@ add_library(Core
- 
- target_link_libraries(Core Registry Ui)
- 
-+list(APPEND CMAKE_PREFIX_PATH /usr/local/opt/qt)
-+set(Qt5WebKit_DIR /usr/local/opt/qt5-webkit/lib/cmake/Qt5WebKit)
-+set(Qt5WebKitWidgets_DIR /usr/local/opt/qt5-webkit/lib/cmake/Qt5WebKitWidgets)
- find_package(Qt5 COMPONENTS Network WebKit Widgets REQUIRED)
- target_link_libraries(Core Qt5::Network Qt5::WebKit Qt5::Widgets)
- 
-+list(APPEND CMAKE_PREFIX_PATH /usr/local/opt/libarchive)
-+list(APPEND CMAKE_LIBRARY_PATH /usr/local/opt/libarchive)
- find_package(LibArchive REQUIRED)
- include_directories(${LibArchive_INCLUDE_DIRS})
- target_link_libraries(Core ${LibArchive_LIBRARIES})
-diff --git a/src/libs/ui/CMakeLists.txt b/src/libs/ui/CMakeLists.txt
-index 1fe12ef..ab47341 100644
---- a/src/libs/ui/CMakeLists.txt
-+++ b/src/libs/ui/CMakeLists.txt
-@@ -31,5 +31,7 @@ add_library(Ui
- 
- target_link_libraries(Ui QxtGlobalShortcut Registry)
- 
-+set(Qt5WebKit_DIR /usr/local/opt/qt5-webkit/lib/cmake/Qt5WebKit)
-+set(Qt5WebKitWidgets_DIR /usr/local/opt/qt5-webkit/lib/cmake/Qt5WebKitWidgets)
- find_package(Qt5 COMPONENTS WebKitWidgets REQUIRED)
- target_link_libraries(Ui Qt5::WebKitWidgets)
