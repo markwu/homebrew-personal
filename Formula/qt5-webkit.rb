@@ -25,6 +25,8 @@ class Qt5Webkit < Formula
 
   depends_on "cmake" => :build
   depends_on :xcode => :build
+  depends_on "libjpeg"
+  depends_on "libpng"
   depends_on "qt"
 
   def install
