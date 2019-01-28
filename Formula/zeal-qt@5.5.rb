@@ -5,7 +5,6 @@ class ZealQtAT55 < Formula
   homepage "http://zealdocs.org/"
   url 'https://github.com/zealdocs/zeal/archive/v0.6.1.tar.gz'
   sha256 '095c08f9903071849d5c79878abd48237ce1615f16d324afff1873ab6b5f0026'
-  head "https://github.com/zealdocs/zeal.git"
   version '0.6.1'
 
   depends_on "cmake" => :build
