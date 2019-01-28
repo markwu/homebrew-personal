@@ -1,0 +1,32 @@
+diff --git a/src/libs/core/CMakeLists.txt b/src/libs/core/CMakeLists.txt
+index cd212bb..c9f08fa 100644
+--- a/src/libs/core/CMakeLists.txt
++++ b/src/libs/core/CMakeLists.txt
+@@ -9,9 +9,14 @@ add_library(Core
+ 
+ target_link_libraries(Core Registry Ui)
+ 
++list(APPEND CMAKE_PREFIX_PATH /usr/local/opt/qt)
++set(Qt5WebKit_DIR /usr/local/opt/qt5-webkit/lib/cmake/Qt5WebKit)
++set(Qt5WebKitWidgets_DIR /usr/local/opt/qt5-webkit/lib/cmake/Qt5WebKitWidgets)
+ find_package(Qt5 COMPONENTS Network WebKit Widgets REQUIRED)
+ target_link_libraries(Core Qt5::Network Qt5::WebKit Qt5::Widgets)
+ 
++list(APPEND CMAKE_PREFIX_PATH /usr/local/opt/libarchive)
++list(APPEND CMAKE_LIBRARY_PATH /usr/local/opt/libarchive)
+ find_package(LibArchive REQUIRED)
+ include_directories(${LibArchive_INCLUDE_DIRS})
+ target_link_libraries(Core ${LibArchive_LIBRARIES})
+diff --git a/src/libs/ui/CMakeLists.txt b/src/libs/ui/CMakeLists.txt
+index 1fe12ef..470de30 100644
+--- a/src/libs/ui/CMakeLists.txt
++++ b/src/libs/ui/CMakeLists.txt
+@@ -31,5 +31,8 @@ add_library(Ui
+ 
+ target_link_libraries(Ui QxtGlobalShortcut Registry)
+ 
++list(APPEND CMAKE_PREFIX_PATH /usr/local/opt/qt)
++set(Qt5WebKit_DIR /usr/local/opt/qt5-webkit/lib/cmake/Qt5WebKit)
++set(Qt5WebKitWidgets_DIR /usr/local/opt/qt5-webkit/lib/cmake/Qt5WebKitWidgets)
+ find_package(Qt5 COMPONENTS WebKitWidgets REQUIRED)
+ target_link_libraries(Ui Qt5::WebKitWidgets)
