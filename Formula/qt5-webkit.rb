@@ -8,7 +8,7 @@ class Qt5Webkit < Formula
   homepage "https://www.qt.io/developers"
   url "https://github.com/qt/qtwebkit.git",
     :branch => "5.212",
-    :commit => "72cfbd7664f21fcc0e62b869a6b01bf73eb5e7da"
+    :commit => "eb6c5179e8650f66b304a656409a1e5e5efec956"
   version "5.212"
 
   # if it is changed this should be applied in CMAKE_INSTALL_PREFIX (see patch)
@@ -19,7 +19,10 @@ class Qt5Webkit < Formula
 
   # fix installation permissions
   # /Tools/qmake/projects/run_cmake.pro
-  patch :DATA
+  patch do
+    url "https://raw.githubusercontent.com/markwu/homebrew-personal/master/Formula/qt5-webkit.diff"
+    sha256 "96ccb8b922ae79bc7a3cd8bfe51a2b12f05f89598a839eafb81d24f27b527fa9"
+  end
 
   keg_only "because Qt5 is keg-only"
 
@@ -219,29 +222,3 @@ class Qt5Webkit < Formula
     end
   end
 end
-
-__END__
---- a/Source/WTF/wtf/spi/darwin/XPCSPI.h
-+++ b/Source/WTF/wtf/spi/darwin/XPCSPI.h
-@@ -97,10 +97,6 @@ EXTERN_C const struct _xpc_type_s _xpc_type_error;
- EXTERN_C const struct _xpc_type_s _xpc_type_string;
-
- EXTERN_C xpc_object_t xpc_array_create(const xpc_object_t*, size_t count);
--#if COMPILER_SUPPORTS(BLOCKS)
--EXTERN_C bool xpc_array_apply(xpc_object_t, XPC_NOESCAPE xpc_array_applier_t);
--EXTERN_C bool xpc_dictionary_apply(xpc_object_t xdict, XPC_NOESCAPE xpc_dictionary_applier_t applier);
--#endif
- EXTERN_C size_t xpc_array_get_count(xpc_object_t);
- EXTERN_C const char* xpc_array_get_string(xpc_object_t, size_t index);
- EXTERN_C void xpc_array_set_string(xpc_object_t, size_t index, const char* string);
-
---- a/Tools/qmake/projects/run_cmake.pro
-+++ b/Tools/qmake/projects/run_cmake.pro
-@@ -22,6 +22,7 @@
-         PORT=Qt \
-         CMAKE_BUILD_TYPE=$$configuration \
-         CMAKE_TOOLCHAIN_FILE=$$toolchain_file \
-+        CMAKE_INSTALL_PREFIX=/usr/local/Cellar/qt5-webkit/5.212
-         USE_LIBHYPHEN=OFF
-
-     !isEmpty(_QMAKE_SUPER_CACHE_) {
