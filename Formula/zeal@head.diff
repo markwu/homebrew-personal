@@ -1,8 +1,8 @@
 diff --git a/src/libs/browser/CMakeLists.txt b/src/libs/browser/CMakeLists.txt
-index d8848d3..6e50378 100644
+index a267d1a..b99e85e 100644
 --- a/src/libs/browser/CMakeLists.txt
 +++ b/src/libs/browser/CMakeLists.txt
-@@ -7,5 +7,8 @@ add_library(Browser
+@@ -7,5 +7,8 @@ add_library(Browser STATIC
  
  target_link_libraries(Browser)
  
@@ -12,10 +12,10 @@ index d8848d3..6e50378 100644
  find_package(Qt5 COMPONENTS WebKitWidgets REQUIRED)
  target_link_libraries(Browser Qt5::WebKitWidgets)
 diff --git a/src/libs/core/CMakeLists.txt b/src/libs/core/CMakeLists.txt
-index cd212bb..c9f08fa 100644
+index 3bd7371..9a75214 100644
 --- a/src/libs/core/CMakeLists.txt
 +++ b/src/libs/core/CMakeLists.txt
-@@ -9,9 +9,14 @@ add_library(Core
+@@ -9,9 +9,14 @@ add_library(Core STATIC
  
  target_link_libraries(Core Registry Ui)
  
@@ -31,12 +31,12 @@ index cd212bb..c9f08fa 100644
  include_directories(${LibArchive_INCLUDE_DIRS})
  target_link_libraries(Core ${LibArchive_LIBRARIES})
 diff --git a/src/libs/ui/CMakeLists.txt b/src/libs/ui/CMakeLists.txt
-index 23ae4ac..05a2aef 100644
+index 8f4b078..68cc2b2 100644
 --- a/src/libs/ui/CMakeLists.txt
 +++ b/src/libs/ui/CMakeLists.txt
-@@ -21,5 +21,8 @@ add_library(Ui
+@@ -24,5 +24,8 @@ add_library(Ui STATIC
  
- target_link_libraries(Ui Browser QxtGlobalShortcut Widgets Registry)
+ target_link_libraries(Ui Browser Sidebar QxtGlobalShortcut Widgets Registry)
  
 +list(APPEND CMAKE_PREFIX_PATH /usr/local/opt/qt)
 +set(Qt5WebKit_DIR /usr/local/opt/qt5-webkit/lib/cmake/Qt5WebKit)
