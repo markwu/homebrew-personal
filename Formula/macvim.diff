@@ -1,0 +1,31 @@
+diff --git a/src/MacVim/PSMTabBarControl/source/PSMTabBarCell.m b/src/MacVim/PSMTabBarControl/source/PSMTabBarCell.m
+index 6f1a06e46..a12e2cea4 100644
+--- a/src/MacVim/PSMTabBarControl/source/PSMTabBarCell.m
++++ b/src/MacVim/PSMTabBarControl/source/PSMTabBarCell.m
+@@ -13,7 +13,9 @@
+ #import "PSMTabDragAssistant.h"
+ 
+ 
+-@implementation PSMTabBarCell
++@implementation PSMTabBarCell {
++    id _controlView;
++}
+ 
+ #pragma mark -
+ #pragma mark Creation/Destruction
+diff --git a/src/auto/configure b/src/auto/configure
+index 59427af0f..f7b904228 100755
+--- a/src/auto/configure
++++ b/src/auto/configure
+@@ -4705,10 +4705,8 @@ fi
+ rm -f core conftest.err conftest.$ac_objext \
+     conftest$ac_exeext conftest.$ac_ext
+   else
+-    if test -z "$MACOSX_DEPLOYMENT_TARGET"; then
+-      macosx_deployment_target=`/usr/bin/sw_vers -productVersion|/usr/bin/sed -e 's/^\([0-9]*\.[0-9]*\).*/\1/'`
++      macosx_deployment_target=${MACOSX_DEPLOYMENT_TARGET:-10.12}
+       XCODEFLAGS="$XCODEFLAGS MACOSX_DEPLOYMENT_TARGET=$macosx_deployment_target"
+-    fi
+   fi
+ 
+ 
