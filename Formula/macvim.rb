@@ -11,6 +11,9 @@ class Macvim < Formula
   depends_on "lua"
   depends_on "python"
 
+  conflicts_with "vim",
+    :because => "vim and macvim both install vi* binaries"
+
   patch do
     url "https://raw.githubusercontent.com/markwu/homebrew-personal/master/Formula/macvim.diff"
     sha256 "fb72a5c1eca901a2f9e1819f828c0b93a5750075f52172a60f6de78b91cf139b"
@@ -25,8 +28,8 @@ class Macvim < Formula
     # MacVim doesn't have or require any Python package, so unset PYTHONPATH
     ENV.delete("PYTHONPATH")
 
-    # If building for OS X 10.7 or up, make sure that CC is set to "clang"
-    ENV.clang if MacOS.version >= :lion
+    # make sure that CC is set to "clang"
+    ENV.clang
 
     opts = []
     if build.with? 'custom-ruby'
@@ -51,14 +54,14 @@ class Macvim < Formula
                           "--with-lua-prefix=#{Formula["lua"].opt_prefix}",
                           *opts
 
+    # Disable Code Signing to get rid of some weird XCode 11 build errors
     inreplace "src/auto/config.mk", "XCODEFLAGS\t=", "XCODEFLAGS\t= CODE_SIGN_IDENTITY="
 
     system "make"
 
+    # Patch MacVim buildin vimrc to fix homebrew python3 dynamic link problem
     app_path = 'src/MacVim/build/Release/MacVim.app'
     vimrc = "#{buildpath}/#{app_path}/Contents/Resources/vim/vimrc"
-
-    # Patch MacVim buildin vimrc to fix homebrew python3 dynamic link problem
     inreplace vimrc, /^if exists\("&pythonthreedll"\) && exists\("&pythonthreehome"\).*$/m, <<~EOS
 if exists("&pythonthreedll") && exists("&pythonthreehome")
   if filereadable("/usr/local/Frameworks/Python.framework/Versions/3.7/Python")
