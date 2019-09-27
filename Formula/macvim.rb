@@ -2,7 +2,6 @@
 class Macvim < Formula
   desc "GUI for vim, made for macOS"
   homepage "https://github.com/macvim-dev/macvim"
-  sha256 "c8c18209d5dbfeaeeb69bd15723840a54507ba181a5fb790093fdfaed04846eb"
   head "https://github.com/macvim-dev/macvim.git"
 
   option 'with-custom-ruby', 'Compiled against with custom ruby.'
@@ -12,8 +11,10 @@ class Macvim < Formula
   depends_on "lua"
   depends_on "python"
 
-  conflicts_with "vim",
-    :because => "vim and macvim both install vi* binaries"
+  patch do
+    url "https://raw.githubusercontent.com/markwu/homebrew-personal/master/Formula/macvim.diff"
+    sha256 "fb72a5c1eca901a2f9e1819f828c0b93a5750075f52172a60f6de78b91cf139b"
+  end
 
   def install
     # Avoid issues finding Ruby headers
@@ -49,6 +50,8 @@ class Macvim < Formula
                           "--enable-luainterp=dynamic",
                           "--with-lua-prefix=#{Formula["lua"].opt_prefix}",
                           *opts
+
+    inreplace "src/auto/config.mk", "XCODEFLAGS\t=", "XCODEFLAGS\t= CODE_SIGN_IDENTITY="
 
     system "make"
 
