@@ -15,8 +15,8 @@ class Macvim < Formula
     :because => "vim and macvim both install vi* binaries"
 
   patch do
-    url "https://raw.githubusercontent.com/markwu/homebrew-personal/master/Formula/macvim.diff"
-    sha256 "fb72a5c1eca901a2f9e1819f828c0b93a5750075f52172a60f6de78b91cf139b"
+    url "https://raw.githubusercontent.com/markwu/homebrew-personal/master/Formula/macvim-pr946.patch"
+    sha256 "b9588efc2c57174967aa13ee485f1108450cc7818ac33e4175db3009c628c6c8"
   end
 
   def install
@@ -53,9 +53,6 @@ class Macvim < Formula
                           "--enable-luainterp=dynamic",
                           "--with-lua-prefix=#{Formula["lua"].opt_prefix}",
                           *opts
-
-    # Disable Code Signing to get rid of some weird XCode 11 build errors
-    inreplace "src/auto/config.mk", "XCODEFLAGS\t=", "XCODEFLAGS\t= CODE_SIGN_IDENTITY="
 
     system "make"
 
