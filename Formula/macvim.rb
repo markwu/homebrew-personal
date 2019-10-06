@@ -14,11 +14,6 @@ class Macvim < Formula
   conflicts_with "vim",
     :because => "vim and macvim both install vi* binaries"
 
-  patch do
-    url "https://raw.githubusercontent.com/markwu/homebrew-personal/master/Formula/macvim-pr946.patch"
-    sha256 "b9588efc2c57174967aa13ee485f1108450cc7818ac33e4175db3009c628c6c8"
-  end
-
   def install
     # Avoid issues finding Ruby headers
     if MacOS.version == :sierra || MacOS.version == :yosemite
