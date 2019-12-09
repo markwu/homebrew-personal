@@ -31,10 +31,10 @@ index 3bd7371..9a75214 100644
  include_directories(${LibArchive_INCLUDE_DIRS})
  target_link_libraries(Core ${LibArchive_LIBRARIES})
 diff --git a/src/libs/ui/CMakeLists.txt b/src/libs/ui/CMakeLists.txt
-index 8f4b078..68cc2b2 100644
+index 5a8da7e..785eb7d 100644
 --- a/src/libs/ui/CMakeLists.txt
 +++ b/src/libs/ui/CMakeLists.txt
-@@ -24,5 +24,8 @@ add_library(Ui STATIC
+@@ -23,5 +23,8 @@ add_library(Ui STATIC
  
  target_link_libraries(Ui Browser Sidebar QxtGlobalShortcut Widgets Registry)
  
