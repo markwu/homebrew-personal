@@ -23,7 +23,7 @@ class Zeal < Formula
   head do
     patch do
       url "https://raw.githubusercontent.com/markwu/homebrew-personal/master/Formula/zeal@head.diff"
-      sha256 "ccd4ec9444e2a7849390cc100d2cd28b443db2642b11e2ac91f920d72d14c695"
+      sha256 "bc039ab7d0e979a976218f9b8fe7cefff659cf4b184d038f8889d47971e1ec83"
     end
   end
 
