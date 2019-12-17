@@ -56,7 +56,7 @@ class Macvim < Formula
   end
 
   def caveats; <<~EOS
-    To compile Vim with custom Ruby, you have to specify the following 
+    To compile MacVim with custom Ruby, you have to specify the following 
     HOMEBREW_CUSTOM_RUBY_HOME environment variable in you shell environment:
 
     # example: get the prefix from RbConfig
