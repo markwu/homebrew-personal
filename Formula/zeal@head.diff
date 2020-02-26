@@ -12,10 +12,10 @@ index a267d1a..b99e85e 100644
  find_package(Qt5 COMPONENTS WebKitWidgets REQUIRED)
  target_link_libraries(Browser Qt5::WebKitWidgets)
 diff --git a/src/libs/core/CMakeLists.txt b/src/libs/core/CMakeLists.txt
-index 3bd7371..9a75214 100644
+index 3976f71..4b4d56d 100644
 --- a/src/libs/core/CMakeLists.txt
 +++ b/src/libs/core/CMakeLists.txt
-@@ -9,9 +9,14 @@ add_library(Core STATIC
+@@ -13,9 +13,14 @@ add_library(Core STATIC
  
  target_link_libraries(Core Registry Ui)
  
