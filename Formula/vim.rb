@@ -15,9 +15,9 @@ class Vim < Formula
 
     # Use RVM Ruby
     ENV["PKG_CONFIG_PATH"] = ENV["HOMEBREW_CUSTOM_RUBY_HOME"] + "/lib/pkgconfig"
-    ENV.prepend_path "PATH" , `pkg-config --variable=bindir ruby-2.6`.chomp
-    ENV.append "LDFLAGS", '-L'+`pkg-config --variable=libdir ruby-2.6`.chomp
-    ENV.append "CFLAGS", '-I'+`pkg-config --variable=includedir ruby-2.6`.chomp
+    ENV.prepend_path "PATH" , `pkg-config --variable=bindir ruby-2.7`.chomp
+    ENV.append "LDFLAGS", '-L'+`pkg-config --variable=libdir ruby-2.7`.chomp
+    ENV.append "CFLAGS", '-I'+`pkg-config --variable=includedir ruby-2.7`.chomp
 
     # Use Homebrew Python
     ENV.prepend_path "PATH", Formula["python"].opt_libexec/"bin"
