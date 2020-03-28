@@ -37,35 +37,37 @@ class Zeal < Formula
     end
   end
 
-  plist_options :manual => "#{HOMEBREW_PREFIX}/opt/zeal/bin/zeal-loopbackalias"
+  if build.head?
+    plist_options :manual => "#{HOMEBREW_PREFIX}/opt/zeal/bin/zeal-loopbackalias"
 
-  def plist
-    <<~EOS
-      <?xml version="1.0" encoding="UTF-8"?>
-      <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-      <plist version="1.0">
-      <dict>
-          <key>Label</key>
-          <string>#{plist_name}-loopbackalias</string>
-          <key>ProgramArguments</key>
-          <array>
-            <string>#{Formula["markwu/personal/zeal"].opt_bin}/zeal-loopbackalias</string>
-          </array>
-          <key>RunAtLoad</key>
-          <true/>
-      </dict>
-      </plist>
-    EOS
-  end
+    def plist
+      <<~EOS
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+        <dict>
+            <key>Label</key>
+            <string>#{plist_name}-loopbackalias</string>
+            <key>ProgramArguments</key>
+            <array>
+              <string>#{Formula["markwu/personal/zeal"].opt_bin}/zeal-loopbackalias</string>
+            </array>
+            <key>RunAtLoad</key>
+            <true/>
+        </dict>
+        </plist>
+      EOS
+    end
 
-  def caveats
-    <<~EOS
-      Before you run Zeal, you have to launch ifconfig loopback alias
-      daemon by following command. It will install lookback alias for
-      you.
+    def caveats
+      <<~EOS
+        Before you run Zeal, you have to launch ifconfig loopback alias
+        daemon by following command. It will install lookback alias for
+        you.
 
-      $ sudo brew services start zeal
-    EOS
+        $ sudo brew services start zeal
+      EOS
+    end
   end
 
   test do
