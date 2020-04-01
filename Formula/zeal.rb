@@ -33,40 +33,6 @@ class Zeal < Formula
       system "make"
       prefix.install "bin/Zeal.app"
       (bin/"zeal").write("#! /bin/sh\n#{prefix}/Zeal.app/Contents/MacOS/Zeal \"$@\"\n")
-      (bin/"zeal-loopbackalias").write("#! /bin/sh\n/sbin/ifconfig lo0 alias 127.0.0.22")
-    end
-  end
-
-  if build.head?
-    plist_options :manual => "#{HOMEBREW_PREFIX}/opt/zeal/bin/zeal-loopbackalias"
-
-    def plist
-      <<~EOS
-        <?xml version="1.0" encoding="UTF-8"?>
-        <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-        <plist version="1.0">
-        <dict>
-            <key>Label</key>
-            <string>#{plist_name}-loopbackalias</string>
-            <key>ProgramArguments</key>
-            <array>
-              <string>#{Formula["markwu/personal/zeal"].opt_bin}/zeal-loopbackalias</string>
-            </array>
-            <key>RunAtLoad</key>
-            <true/>
-        </dict>
-        </plist>
-      EOS
-    end
-
-    def caveats
-      <<~EOS
-        Before you run Zeal, you have to launch ifconfig loopback alias
-        daemon by following command. It will install lookback alias for
-        you.
-
-        $ sudo brew services start zeal
-      EOS
     end
   end
 
