@@ -8,6 +8,7 @@ class Macvim < Formula
   depends_on "cscope"
   depends_on "lua"
   depends_on "python"
+  depends_on "perl"
 
   def install
     # Avoid issues finding SDK Ruby headers
