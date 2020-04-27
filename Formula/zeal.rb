@@ -20,13 +20,6 @@ class Zeal < Formula
     end
   end
 
-  head do
-    patch do
-      url "https://raw.githubusercontent.com/markwu/homebrew-personal/master/Formula/zeal@head.diff"
-      sha256 "91ea0afb7f18865c859fa47301c6f12a4c9aec4556d8b705f7ce32c1caa8102a"
-    end
-  end
-
   def install
     mkdir "build" do
       system "cmake", "..", *std_cmake_args
