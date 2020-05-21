@@ -18,10 +18,10 @@ class OsxCpuTemp < Formula
 end
 __END__
 diff --git a/smc.c b/smc.c
-index 80926b4..fc7bb1b 100644
+index 80926b4..52ff701 100644
 --- a/smc.c
 +++ b/smc.c
-@@ -272,11 +272,12 @@ void readAndPrintFanRPMs(void)
+@@ -272,11 +272,11 @@ void readAndPrintFanRPMs(void)
                  continue;
              }
 
@@ -29,12 +29,11 @@ index 80926b4..fc7bb1b 100644
 -            if (rpm < 0.f) {
 -                rpm = 0.f;
 +            float rpm = actual_speed;
-+            float difference = actual_speed - minimum_speed;
-+            if (difference < 0.f) {
-+                difference = 0.f;
++            if (rpm > maximum_speed) {
++                rpm = maximum_speed;
              }
 -            float pct = rpm / (maximum_speed - minimum_speed);
-+            float pct = difference / (maximum_speed - minimum_speed);
++            float pct = rpm / maximum_speed;
 
              pct *= 100.f;
              printf("Fan %d - %s at %.0f RPM (%.0f%%)\n", i, name, rpm, pct);
