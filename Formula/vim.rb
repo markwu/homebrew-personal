@@ -3,31 +3,22 @@ class Vim < Formula
   homepage "https://www.vim.org/"
   head "https://github.com/vim/vim.git"
 
-  depends_on :xcode => :build
-  depends_on "pkg-config" => :build
-  depends_on "cscope"
+  depends_on "gettext"
   depends_on "lua"
-  depends_on "python"
   depends_on "perl"
+  depends_on "python@3.8"
+  depends_on "ruby"
+
+  uses_from_macos "ncurses"
 
   def install
-    # Avoid issues finding SDK Ruby headers
+    ENV.prepend_path "PATH", Formula["python@3.8"].opt_libexec/"bin"
+
+    # https://github.com/Homebrew/homebrew-core/pull/1046
     ENV.delete("SDKROOT")
 
-    # Use RVM Ruby
-    ENV["PKG_CONFIG_PATH"] = ENV["HOMEBREW_CUSTOM_RUBY_HOME"] + "/lib/pkgconfig"
-    ENV.prepend_path "PATH" , `pkg-config --variable=bindir ruby-2.7`.chomp
-    ENV.append "LDFLAGS", '-L'+`pkg-config --variable=libdir ruby-2.7`.chomp
-    ENV.append "CFLAGS", '-I'+`pkg-config --variable=includedir ruby-2.7`.chomp
-
-    # Use Homebrew Python
-    ENV.prepend_path "PATH", Formula["python"].opt_libexec/"bin"
-
-    # Vim doesn't require any Python package, unset PYTHONPATH.
+    # vim doesn't require any Python package, unset PYTHONPATH.
     ENV.delete("PYTHONPATH")
-
-    # make sure that CC is set to "clang"
-    ENV.clang
 
     # We specify HOMEBREW_PREFIX as the prefix to make vim look in the
     # the right place (HOMEBREW_PREFIX/share/vim/{vimrc,vimfiles}) for
@@ -35,8 +26,7 @@ class Vim < Formula
     # when calling "make install".
     # Homebrew will use the first suitable Perl & Ruby in your PATH if you
     # build from source. Please don't attempt to hardcode either.
-    system "./configure", "--prefix=#{prefix}",
-                          "--with-features=huge",
+    system "./configure", "--prefix=#{HOMEBREW_PREFIX}",
                           "--mandir=#{man}",
                           "--enable-multibyte",
                           "--with-tlib=ncurses",
@@ -59,20 +49,6 @@ class Vim < Formula
     # https://github.com/vim/vim/issues/114
     system "make", "install", "prefix=#{prefix}", "STRIP=#{which "true"}"
     bin.install_symlink "vim" => "vi"
-  end
-
-  def caveats; <<~EOS
-    To compile Vim with custom Ruby, you have to specify the following 
-    HOMEBREW_CUSTOM_RUBY_HOME environment variable in you shell environment:
-
-    # example: get the prefix from RbConfig
-    $ export HOMEBREW_CUSTOM_RUBY_HOME=$(ruby -r rbconfig -e "print RbConfig::CONFIG['prefix']")
-
-    # example: get the prefix from RVM environment variable
-    $ export HOMEBREW_CUSTOM_RUBY_HOME=$MY_RUBY_HOME
-
-    Without  HOMEBREW_CUSTOM_RUBY_HOME, custom Ruby can not link correctly.
-    EOS
   end
 
   test do
