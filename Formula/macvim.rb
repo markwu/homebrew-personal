@@ -1,37 +1,26 @@
+# Reference: https://github.com/macvim-dev/macvim/wiki/building
 class Macvim < Formula
   desc "GUI for vim, made for macOS"
   homepage "https://github.com/macvim-dev/macvim"
   head "https://github.com/macvim-dev/macvim.git"
 
   depends_on :xcode => :build
-  depends_on "pkg-config" => :build
   depends_on "cscope"
   depends_on "lua"
-  depends_on "python"
-  depends_on "perl"
+  depends_on "python@3.8"
+  depends_on "ruby"
 
   def install
-    # Avoid issues finding SDK Ruby headers
+    # Avoid issues finding Ruby headers
     ENV.delete("SDKROOT")
 
-    # Use RVM Ruby
-    ENV["PKG_CONFIG_PATH"] = ENV["HOMEBREW_CUSTOM_RUBY_HOME"] + "/lib/pkgconfig"
-    ENV.prepend_path "PATH" , `pkg-config --variable=bindir ruby-2.7`.chomp
-    ENV.append "LDFLAGS", '-L'+`pkg-config --variable=libdir ruby-2.7`.chomp
-    ENV.append "CFLAGS", '-I'+`pkg-config --variable=includedir ruby-2.7`.chomp
-
-    # Use Homebrew Python
-    ENV.prepend_path "PATH", Formula["python"].opt_libexec/"bin"
-
-    # Vim doesn't require any Python package, unset PYTHONPATH.
+    # MacVim doesn't have or require any Python package, so unset PYTHONPATH
     ENV.delete("PYTHONPATH")
 
     # make sure that CC is set to "clang"
     ENV.clang
 
-    system "./configure", "--prefix=#{HOMEBREW_PREFIX}",
-                          "--with-compiledby=Homebrew",
-                          "--with-features=huge",
+    system "./configure", "--with-features=huge",
                           "--enable-multibyte",
                           "--with-macarchs=#{MacOS.preferred_arch}",
                           "--enable-perlinterp",
@@ -45,7 +34,8 @@ class Macvim < Formula
                           "--enable-luainterp",
                           "--with-lua-prefix=#{Formula["lua"].opt_prefix}",
                           "--enable-luainterp",
-                          "--enable-python3interp"
+                          "--enable-python3interp",
+                          "--disable-sparkle"
     system "make"
 
     prefix.install "src/MacVim/build/Release/MacVim.app"
@@ -56,26 +46,12 @@ class Macvim < Formula
     executables.each { |e| bin.install_symlink "mvim" => e }
   end
 
-  def caveats; <<~EOS
-    To compile MacVim with custom Ruby, you have to specify the following 
-    HOMEBREW_CUSTOM_RUBY_HOME environment variable in you shell environment:
-
-    # example: get the prefix from RbConfig
-    $ export HOMEBREW_CUSTOM_RUBY_HOME=$(ruby -r rbconfig -e "print RbConfig::CONFIG['prefix']")
-
-    # example: get the prefix from RVM environment variable
-    $ export HOMEBREW_CUSTOM_RUBY_HOME=$MY_RUBY_HOME
-
-    Without  HOMEBREW_CUSTOM_RUBY_HOME, custom Ruby can not link correctly.
-    EOS
-  end
-
   test do
     output = shell_output("#{bin}/mvim --version")
     assert_match "+ruby", output
 
     # Simple test to check if MacVim was linked to Homebrew's Python 3
-    py3_exec_prefix = Utils.popen_read("python3-config", "--exec-prefix")
+    py3_exec_prefix = Utils.popen_read(Formula["python@3.8"].opt_bin/"python3-config", "--exec-prefix")
     assert_match py3_exec_prefix.chomp, output
     (testpath/"commands.vim").write <<~EOS
       :python3 import vim; vim.current.buffer[0] = 'hello python3'
