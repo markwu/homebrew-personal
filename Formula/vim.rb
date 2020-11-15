@@ -6,13 +6,13 @@ class Vim < Formula
   depends_on "gettext"
   depends_on "lua"
   depends_on "perl"
-  depends_on "python@3.8"
+  depends_on "python@3.9"
   depends_on "ruby"
 
   uses_from_macos "ncurses"
 
   def install
-    ENV.prepend_path "PATH", Formula["python@3.8"].opt_libexec/"bin"
+    ENV.prepend_path "PATH", Formula["python@3.9"].opt_libexec/"bin"
 
     # https://github.com/Homebrew/homebrew-core/pull/1046
     ENV.delete("SDKROOT")
