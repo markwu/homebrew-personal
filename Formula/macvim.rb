@@ -4,15 +4,15 @@ class Macvim < Formula
   homepage "https://github.com/macvim-dev/macvim"
   head "https://github.com/macvim-dev/macvim.git"
 
-  # patch xcode project
-  patch :DATA
-
   depends_on xcode: :build
   depends_on "cscope"
   depends_on "gettext"
   depends_on "lua"
   depends_on "python@3.9"
   depends_on "ruby"
+
+  # patch xcode project
+  patch :DATA
 
   def install
     # Avoid issues finding Ruby headers
@@ -112,3 +112,75 @@ index 729c23009..9b66f5335 100644
  				GCC_VERSION = 4.2;
  				GCC_WARN_ABOUT_RETURN_TYPE = YES;
  				GCC_WARN_UNUSED_VARIABLE = YES;
+diff --git a/src/MacVim/PSMTabBarControl/PSMTabBarControl.xcodeproj/project.pbxproj b/src/MacVim/PSMTabBarControl/PSMTabBarControl.xcodeproj/project.pbxproj
+index 21c3f7f56..6b7477acf 100644
+--- a/src/MacVim/PSMTabBarControl/PSMTabBarControl.xcodeproj/project.pbxproj
++++ b/src/MacVim/PSMTabBarControl/PSMTabBarControl.xcodeproj/project.pbxproj
+@@ -456,13 +456,14 @@
+ 		0259C573FE90428111CA0C5A /* Project object */ = {
+ 			isa = PBXProject;
+ 			attributes = {
+-				LastUpgradeCheck = 0710;
++				LastUpgradeCheck = 1220;
+ 			};
+ 			buildConfigurationList = C056398B08A954F8003078D8 /* Build configuration list for PBXProject "PSMTabBarControl" */;
+ 			compatibilityVersion = "Xcode 3.2";
+ 			developmentRegion = English;
+ 			hasScannedForEncodings = 1;
+ 			knownRegions = (
++				English,
+ 				en,
+ 			);
+ 			mainGroup = 0259C574FE90428111CA0C5A /* PSMTabBarControl */;
+@@ -676,6 +677,7 @@
+ 			isa = XCBuildConfiguration;
+ 			buildSettings = {
+ 				ENABLE_TESTABILITY = YES;
++				EXCLUDED_ARCHS = arm64;
+ 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+ 				GCC_WARN_UNUSED_VARIABLE = YES;
+ 				ONLY_ACTIVE_ARCH = YES;
+@@ -687,6 +689,7 @@
+ 		C056398D08A954F8003078D8 /* Release */ = {
+ 			isa = XCBuildConfiguration;
+ 			buildSettings = {
++				EXCLUDED_ARCHS = arm64;
+ 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+ 				GCC_WARN_UNUSED_VARIABLE = YES;
+ 				ONLY_ACTIVE_ARCH = YES;
+diff --git a/src/MacVim/qlstephen/QuickLookStephen.xcodeproj/project.pbxproj b/src/MacVim/qlstephen/QuickLookStephen.xcodeproj/project.pbxproj
+index c7de7370d..030dbe89b 100644
+--- a/src/MacVim/qlstephen/QuickLookStephen.xcodeproj/project.pbxproj
++++ b/src/MacVim/qlstephen/QuickLookStephen.xcodeproj/project.pbxproj
+@@ -134,13 +134,14 @@
+ 		089C1669FE841209C02AAC07 /* Project object */ = {
+ 			isa = PBXProject;
+ 			attributes = {
+-				LastUpgradeCheck = 0730;
++				LastUpgradeCheck = 1220;
+ 			};
+ 			buildConfigurationList = 2CA326220896AD4900168862 /* Build configuration list for PBXProject "QuickLookStephen" */;
+ 			compatibilityVersion = "Xcode 3.2";
+ 			developmentRegion = English;
+ 			hasScannedForEncodings = 1;
+ 			knownRegions = (
++				English,
+ 				en,
+ 			);
+ 			mainGroup = 089C166AFE841209C02AAC07 /* QuickLookStephen */;
+@@ -241,6 +242,7 @@
+ 			isa = XCBuildConfiguration;
+ 			buildSettings = {
+ 				ENABLE_TESTABILITY = YES;
++				EXCLUDED_ARCHS = arm64;
+ 				GCC_C_LANGUAGE_STANDARD = c99;
+ 				GCC_PREPROCESSOR_DEFINITIONS = "RKL_PREPEND_TO_METHODS=rkl_";
+ 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+@@ -259,6 +261,7 @@
+ 		2CA326240896AD4900168862 /* Release */ = {
+ 			isa = XCBuildConfiguration;
+ 			buildSettings = {
++				EXCLUDED_ARCHS = arm64;
+ 				GCC_C_LANGUAGE_STANDARD = c99;
+ 				GCC_PREPROCESSOR_DEFINITIONS = "RKL_PREPEND_TO_METHODS=rkl_";
+ 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
