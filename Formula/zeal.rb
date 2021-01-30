@@ -10,6 +10,8 @@ class Zeal < Formula
   depends_on "libarchive"
 
   def install
+    system "git fetch --tags"
+    system "git fetch --prune --unshallow"
     mkdir "build" do
       system "cmake", "..", *std_cmake_args
       system "make"
