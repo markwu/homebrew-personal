@@ -5,11 +5,11 @@ class Vim < Formula
 
   depends_on "gettext"
   depends_on "lua"
+  depends_on "ncurses"
   depends_on "perl"
   depends_on "python@3.9"
   depends_on "ruby"
 
-  uses_from_macos "ncurses"
 
   def install
     ENV.prepend_path "PATH", Formula["python@3.9"].opt_libexec/"bin"
