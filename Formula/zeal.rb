@@ -6,10 +6,12 @@ class Zeal < Formula
   head "https://github.com/zealdocs/zeal.git"
 
   depends_on "cmake" => :build
-  depends_on "qt"
+  depends_on "qt@5"
   depends_on "libarchive"
 
   def install
+    # system "git fetch --tags"
+    # system "git fetch --prune --unshallow"
     mkdir "build" do
       system "cmake", "..", *std_cmake_args
       system "make"
