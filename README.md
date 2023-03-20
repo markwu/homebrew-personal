@@ -18,5 +18,5 @@
 2. Zeal is now available to be run. If you want you can move it to your Applications folder (not necessary if you run it through Spotlight):
 
     ```bash
-    cp -Rp /usr/local/Cellar/zeal/*/Zeal.app ~/Applications/
+    cp -Rp /opt/homebrew/Cellar/zeal/*/Zeal.app /Applications/
     ```
