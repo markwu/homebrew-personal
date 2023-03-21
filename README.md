@@ -23,7 +23,6 @@ Apple Silicon
     ```
     
 Intel Macs
-
     ```bash
     cp -Rp /usr/local/Cellar/zeal/*/Zeal.app ~/Applications/
     ```
