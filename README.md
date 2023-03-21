@@ -24,7 +24,5 @@ $ cp -Rp /opt/homebrew/Cellar/zeal/*/Zeal.app /Applications/
     
 Intel Macs
 ```cli
-
 $ cp -Rp /usr/local/Cellar/zeal/*/Zeal.app ~/Applications/
-
 ```
